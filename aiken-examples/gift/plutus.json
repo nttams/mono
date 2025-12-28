@@ -1,0 +1,81 @@
+{
+  "preamble": {
+    "title": "tamngo/gift",
+    "description": "Aiken contracts for project 'tamngo/gift'",
+    "version": "0.0.0",
+    "plutusVersion": "v3",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.1.19+e525483"
+    },
+    "license": "Apache-2.0"
+  },
+  "validators": [
+    {
+      "title": "gift.gift.spend",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/gift~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/gift~1Redeemer"
+        }
+      },
+      "compiledCode": "58e301010029800aba2aba1aab9faab9eaab9dab9a48888896600264646644b30013370e900118031baa00189919912cc004cdc3a400060126ea801626464b3001300f0028acc004cdc3a400060166ea800e26466446600400400244b30010018a508acc004cdc79bae30110010038a518998010011809000a01a40406eb0c03cc040c040c040c040c040c040c040c040c034dd518078051bae300e300c3754601c60186ea800e2c80522c8068dd7180680098051baa0058b2010300a001300a300b00130073754003164014600e002600e6010002600e00260066ea801e29344d95900101",
+      "hash": "29103d8d62cc9ee4da6ff40a3b20b942ed1a2e288d7485303329cec3"
+    },
+    {
+      "title": "gift.gift.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "58e301010029800aba2aba1aab9faab9eaab9dab9a48888896600264646644b30013370e900118031baa00189919912cc004cdc3a400060126ea801626464b3001300f0028acc004cdc3a400060166ea800e26466446600400400244b30010018a508acc004cdc79bae30110010038a518998010011809000a01a40406eb0c03cc040c040c040c040c040c040c040c040c034dd518078051bae300e300c3754601c60186ea800e2c80522c8068dd7180680098051baa0058b2010300a001300a300b00130073754003164014600e002600e6010002600e00260066ea801e29344d95900101",
+      "hash": "29103d8d62cc9ee4da6ff40a3b20b942ed1a2e288d7485303329cec3"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "aiken/crypto/VerificationKeyHash": {
+      "title": "VerificationKeyHash",
+      "dataType": "bytes"
+    },
+    "gift/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "owner",
+              "$ref": "#/definitions/aiken~1crypto~1VerificationKeyHash"
+            }
+          ]
+        }
+      ]
+    },
+    "gift/Redeemer": {
+      "title": "Redeemer",
+      "anyOf": [
+        {
+          "title": "Redeemer",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "msg",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
