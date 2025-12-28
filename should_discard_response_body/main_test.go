@@ -9,24 +9,19 @@ import (
 )
 
 /*
-go test -bench . -benchmem
+go test -bench . -benchmem -v
 goos: darwin
 goarch: arm64
 pkg: should_discard_response_body
 cpu: Apple M2
-BenchmarkHTTPDiscard-8             25954             45770 ns/op           38605 B/op         69 allocs/op
---- BENCH: BenchmarkHTTPDiscard-8
-    main_test.go:75: Connections Created: 1, Connections Reused: 0
-    main_test.go:75: Connections Created: 1, Connections Reused: 99
-    main_test.go:75: Connections Created: 1, Connections Reused: 9999
-    main_test.go:75: Connections Created: 1, Connections Reused: 25953
-BenchmarkHTTPNoDiscard-8           10000            105554 ns/op           51082 B/op        131 allocs/op
---- BENCH: BenchmarkHTTPNoDiscard-8
-    main_test.go:75: Connections Created: 1, Connections Reused: 0
-    main_test.go:75: Connections Created: 100, Connections Reused: 0
-    main_test.go:75: Connections Created: 10000, Connections Reused: 0
+BenchmarkHTTPDiscard
+    main_test.go:72: Connections Created: 1, Connections Reused: 25208
+BenchmarkHTTPDiscard-8             25209             46355 ns/op           38582 B/op         69 allocs/op
+BenchmarkHTTPNoDiscard
+    main_test.go:72: Connections Created: 11319, Connections Reused: 0
+BenchmarkHTTPNoDiscard-8           11319            106628 ns/op           51070 B/op        131 allocs/op
 PASS
-ok      should_discard_response_body    3.034s
+ok      should_discard_response_body    2.683s
 */
 
 func BenchmarkHTTPDiscard(b *testing.B) {
@@ -45,8 +40,7 @@ func doBench(b *testing.B, discard bool) {
 
 	var created, reused int
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		trace := &httptrace.ClientTrace{
 			GotConn: func(connInfo httptrace.GotConnInfo) {
 				if connInfo.Reused {
@@ -57,7 +51,7 @@ func doBench(b *testing.B, discard bool) {
 			},
 		}
 
-		req, _ := http.NewRequest("GET", server.URL, nil)
+		req, _ := http.NewRequest(http.MethodGet, server.URL, nil)
 		req = req.WithContext(httptrace.WithClientTrace(req.Context(), trace))
 
 		resp, err := client.Do(req)
@@ -70,8 +64,6 @@ func doBench(b *testing.B, discard bool) {
 		}
 		resp.Body.Close()
 	}
-
-	// Print results at the end of the benchmark
 	b.Logf("Connections Created: %d, Connections Reused: %d", created, reused)
 }
 
